@@ -127,14 +127,14 @@ const ContactForm = () => {
                 type="submit"
                 size="lg"
                 disabled={isSubmitting}
-                className="w-full h-14 text-lg bg-accent hover:bg-accent/90 shadow-soft hover:shadow-card transition-smooth"
+                className="w-full min-h-[56px] px-6 py-4 text-base md:text-lg bg-accent hover:bg-accent/90 shadow-soft hover:shadow-card transition-smooth whitespace-normal text-center leading-relaxed break-words flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   "Enviando..."
                 ) : (
                   <>
-                    <Send className="mr-2 h-5 w-5" />
-                    Solicitar diagnóstico gratuito
+                    <Send className="h-5 w-5 flex-shrink-0" />
+                    <span>Solicitar diagnóstico gratuito</span>
                   </>
                 )}
               </Button>

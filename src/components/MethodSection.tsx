@@ -204,10 +204,10 @@ const MethodSection = () => {
           <Button
             onClick={scrollToForm}
             size="lg"
-            className="bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle px-8 py-6 text-base"
+            className="w-full max-w-2xl mx-auto bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle px-6 py-4 text-base md:text-lg whitespace-normal text-center leading-relaxed break-words min-h-[56px] flex items-center justify-center gap-2"
           >
-            <MessageCircle className="w-5 h-5 mr-2" />
-            Descubra onde você está perdendo oportunidades — fale com um especialista
+            <MessageCircle className="w-5 h-5 flex-shrink-0" />
+            <span>Descubra onde você está perdendo oportunidades — fale com um especialista</span>
           </Button>
         </div>
       </div>
