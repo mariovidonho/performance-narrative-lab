@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import heroDashboard from "@/assets/hero-dashboard.png";
+import logoAnimation from "@/assets/vicommerce-logo-animation.mp4";
 
 // Helper to parse 'rgb(r, g, b)' or 'rgba(r, g, b, a)' string to {r, g, b}
 const parseRgbColor = (colorString: string) => {
@@ -192,9 +192,12 @@ const HeroSection = () => {
         <div className="mt-12 lg:mt-16 w-full max-w-screen-md mx-auto overflow-hidden px-4 sm:px-2">
           <div className="bg-border rounded-[2rem] p-[0.25rem]">
             <div className="relative h-64 sm:h-72 md:h-80 lg:h-[28rem] rounded-[1.75rem] bg-card flex items-center justify-center overflow-hidden">
-              <img
-                src={heroDashboard}
-                alt="Dashboard de Performance da Vicommerce"
+              <video
+                src={logoAnimation}
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
