@@ -44,11 +44,11 @@ const JourneySection = () => {
     <section className="py-20 md:py-32 bg-[#F5EFE0] relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-4 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#424242]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#424242] tracking-tight leading-tight">
             Em que parte da jornada do seu cliente{" "}
-            <span className="text-[#E57373]">você está perdendo dinheiro?</span>
+            <span className="text-[#E57373] font-bold">você está perdendo dinheiro?</span>
           </h2>
-          <p className="text-lg md:text-xl text-[#616161] max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl font-light text-[#616161] max-w-4xl mx-auto leading-relaxed">
             Cada negócio tem um ponto de fuga em sua jornada. Descubra onde você está e como podemos transformá-lo em lucro.
           </p>
         </div>
@@ -72,11 +72,11 @@ const JourneySection = () => {
                         <Icon className="w-8 h-8 text-white" strokeWidth={2} />
                       </div>
                       <div className="space-y-2">
-                        <span className="text-xs font-semibold text-[#FFB74D] uppercase tracking-wider">
+                        <span className="text-xs font-medium text-[#FFB74D] uppercase tracking-widest">
                           Etapa {index + 1}
                         </span>
-                        <h3 className="font-bold text-lg text-[#424242]">{step.title}</h3>
-                        <p className="text-sm text-[#616161] leading-relaxed">
+                        <h3 className="font-semibold text-xl text-[#424242] tracking-tight">{step.title}</h3>
+                        <p className="text-sm font-light text-[#616161] leading-relaxed">
                           {step.description}
                         </p>
                       </div>
@@ -124,11 +124,11 @@ const JourneySection = () => {
                           <Icon className="w-10 h-10 text-white" strokeWidth={2} />
                         </div>
                         <div className="space-y-2">
-                          <span className="text-xs font-semibold text-[#FFB74D] uppercase tracking-wider">
+                          <span className="text-xs font-medium text-[#FFB74D] uppercase tracking-widest">
                             Etapa {index + 1}
                           </span>
-                          <h3 className="font-bold text-xl text-[#424242]">{step.title}</h3>
-                          <p className="text-base text-[#616161] leading-relaxed">
+                          <h3 className="font-semibold text-2xl text-[#424242] tracking-tight">{step.title}</h3>
+                          <p className="text-base font-light text-[#616161] leading-relaxed">
                             {step.description}
                           </p>
                         </div>

@@ -49,11 +49,11 @@ const MethodSection = () => {
     <section className="py-20 md:py-32 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-4 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#424242]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#424242] tracking-tight leading-tight">
             O método que transforma{" "}
-            <span className="text-[#81C784]">marketing em faturamento</span>.
+            <span className="text-[#81C784] font-bold">marketing em faturamento</span>.
           </h2>
-          <p className="text-lg md:text-xl text-[#616161] max-w-4xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl font-light text-[#616161] max-w-4xl mx-auto leading-relaxed">
             Cada profissional da Vicommerce atua em uma etapa da jornada do seu cliente — desde o reconhecimento até a fidelização — garantindo que nenhum centavo do seu investimento seja desperdiçado.
           </p>
         </div>
@@ -94,11 +94,11 @@ const MethodSection = () => {
                         <Icon className="w-8 h-8 text-white" fill="currentColor" strokeWidth={0} />
                       </div>
                       <div className="space-y-2">
-                        <span className="text-xs font-semibold text-[#64B5F6] uppercase tracking-wider">
+                        <span className="text-xs font-medium text-[#64B5F6] uppercase tracking-widest">
                           Etapa {index + 1}
                         </span>
-                        <h3 className="font-bold text-lg text-[#424242]">{step.title}</h3>
-                        <p className="text-sm text-[#616161] leading-relaxed">
+                        <h3 className="font-semibold text-xl text-[#424242] tracking-tight">{step.title}</h3>
+                        <p className="text-sm font-light text-[#616161] leading-relaxed">
                           {step.description}
                         </p>
                       </div>
@@ -150,11 +150,11 @@ const MethodSection = () => {
                           <Icon className="w-10 h-10 text-white" fill="currentColor" strokeWidth={0} />
                         </div>
                         <div className="space-y-2">
-                          <span className="text-xs font-semibold text-[#64B5F6] uppercase tracking-wider">
+                          <span className="text-xs font-medium text-[#64B5F6] uppercase tracking-widest">
                             Etapa {index + 1}
                           </span>
-                          <h3 className="font-bold text-xl text-[#424242]">{step.title}</h3>
-                          <p className="text-base text-[#616161] leading-relaxed">
+                          <h3 className="font-semibold text-2xl text-[#424242] tracking-tight">{step.title}</h3>
+                          <p className="text-base font-light text-[#616161] leading-relaxed">
                             {step.description}
                           </p>
                         </div>
@@ -200,14 +200,14 @@ const MethodSection = () => {
         </div>
 
         {/* CTA Button */}
-        <div className="text-center animate-fade-in">
+        <div className="text-center animate-fade-in px-4">
           <Button
             onClick={scrollToForm}
             size="lg"
-            className="w-full max-w-2xl mx-auto bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle px-6 py-4 text-base md:text-lg whitespace-normal text-center leading-relaxed break-words min-h-[56px] flex items-center justify-center gap-2"
+            className="w-full max-w-3xl mx-auto bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle px-6 py-5 md:px-8 md:py-6 text-base md:text-lg font-medium whitespace-normal text-center leading-snug md:leading-relaxed break-words overflow-wrap-anywhere min-h-[80px] md:min-h-[72px] flex flex-col sm:flex-row items-center justify-center gap-3"
           >
-            <MessageCircle className="w-5 h-5 flex-shrink-0" />
-            <span>Descubra onde você está perdendo oportunidades — fale com um especialista</span>
+            <MessageCircle className="w-6 h-6 flex-shrink-0" />
+            <span className="block leading-snug">Descubra onde você está perdendo oportunidades — fale com um especialista</span>
           </Button>
         </div>
       </div>
