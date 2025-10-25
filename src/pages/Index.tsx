@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import JourneySection from "@/components/JourneySection";
+import TransitionAnimation from "@/components/TransitionAnimation";
 import MethodSection from "@/components/MethodSection";
 import ResultsSection from "@/components/ResultsSection";
 import ContactForm from "@/components/ContactForm";
@@ -10,6 +11,7 @@ const Index = () => {
     <main className="min-h-screen">
       <HeroSection />
       <JourneySection />
+      <TransitionAnimation />
       <MethodSection />
       <ResultsSection />
       <ContactForm />
