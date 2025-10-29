@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+
 import { Users, Target, DollarSign, TrendingUp } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+
 
 const results = [
   {
@@ -28,6 +30,7 @@ const results = [
   },
 ];
 
+
 const CountUp = ({ end, duration = 2000, prefix = "", suffix = "" }: { 
   end: number; 
   duration?: number; 
@@ -35,6 +38,8 @@ const CountUp = ({ end, duration = 2000, prefix = "", suffix = "" }: {
   suffix?: string;
 }) => {
   const [count, setCount] = useState(0);
+  const isDecimal = end % 1 !== 0;
+  const decimalPlaces = isDecimal ? end.toString().split(".")[1]?.length || 2 : 0;
   const countRef = useRef<HTMLSpanElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -64,8 +69,9 @@ const CountUp = ({ end, duration = 2000, prefix = "", suffix = "" }: {
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
+      const currentValue = progress * end;
 
-      setCount(Math.floor(progress * end));
+      setCount(currentValue);
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
@@ -81,7 +87,7 @@ const CountUp = ({ end, duration = 2000, prefix = "", suffix = "" }: {
 
   return (
     <span ref={countRef} className="font-bold text-4xl md:text-5xl">
-      {prefix}{count.toLocaleString('pt-BR')}{suffix}
+      {prefix}{count.toLocaleString('pt-BR', { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })}{suffix}
     </span>
   );
 };
