@@ -2,319 +2,225 @@ import { useEffect, useRef, useState } from "react";
 
 const TransitionAnimation = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [animationStarted, setAnimationStarted] = useState(false);
-  const [skipAnimation, setSkipAnimation] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Detect mobile
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !animationStarted) {
-            setAnimationStarted(true);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+  // Scroll-based animation calculation
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
 
-    return () => observer.disconnect();
-  }, [animationStarted]);
+      const element = containerRef.current;
+      const rect = element.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
 
-  const handleSkip = () => {
-    setSkipAnimation(true);
+      // Calculate scroll progress (0 to 1)
+      const scrollStart = rect.top - windowHeight;
+      const scrollEnd = rect.bottom;
+      const scrollRange = scrollEnd - scrollStart;
+      const currentScroll = -scrollStart;
+
+      const progress = Math.max(0, Math.min(1, currentScroll / scrollRange));
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial calculation
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Calculate phase progress (0-1 for each phase)
+  const phase1 = Math.max(0, Math.min(1, scrollProgress / 0.25)); // 0-25%
+  const phase2 = Math.max(0, Math.min(1, (scrollProgress - 0.25) / 0.25)); // 25-50%
+  const phase3 = Math.max(0, Math.min(1, (scrollProgress - 0.5) / 0.25)); // 50-75%
+  const phase4 = Math.max(0, Math.min(1, (scrollProgress - 0.75) / 0.25)); // 75-100%
+
+  // Logo scale and opacity
+  const logoScale = phase1;
+  const logoOpacity = phase1;
+
+  // Scanner progress
+  const scannerProgress = phase2;
+
+  // Portal expansion
+  const portalScale = 1 + (phase3 * 19); // 1 to 20
+  const portalOpacity = phase3 * (1 - phase4); // Fades out in phase 4
+
+  // Background color transition
+  const bgProgress = Math.max(0, Math.min(1, (scrollProgress - 0.5) / 0.3));
+  const bgColor = {
+    r: 245 + (255 - 245) * bgProgress,
+    g: 239 + (255 - 239) * bgProgress,
+    b: 224 + (255 - 224) * bgProgress,
   };
 
-  if (skipAnimation) {
-    return null;
-  }
+  // Particle opacity (simplified - fewer particles)
+  const particlesOpacity = phase2 * (1 - phase3);
+
+  // Text content based on phase
+  const getText = () => {
+    if (scrollProgress < 0.25) return "";
+    if (scrollProgress < 0.5) return "Identificando pontos de vazamento...";
+    if (scrollProgress < 0.75) return "Transformando em oportunidades...";
+    return "O método que gera resultados.";
+  };
+
+  const textOpacity = scrollProgress > 0.2 ? Math.min(1, (scrollProgress - 0.2) / 0.1) : 0;
 
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#F5EFE0] transition-colors duration-1000"
+      className="relative w-full overflow-hidden"
       style={{
-        backgroundColor: animationStarted ? "#FFFFFF" : "#F5EFE0",
+        minHeight: isMobile ? '200vh' : '300vh',
+        backgroundColor: `rgb(${bgColor.r}, ${bgColor.g}, ${bgColor.b})`,
       }}
     >
-      {/* Skip Button */}
-      <button
-        onClick={handleSkip}
-        className="absolute top-4 right-4 z-50 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-        aria-label="Pular animação"
+      {/* Sticky container - stays fixed while scrolling */}
+      <div 
+        className="sticky top-0 w-full flex items-center justify-center"
+        style={{ height: '100vh' }}
       >
-        Pular animação →
-      </button>
+        {/* Main content */}
+        <div className="relative w-full h-full flex items-center justify-center">
+          
+          {/* Logo/Lupa - Phase 1 */}
+          <div
+            className="relative z-10"
+            style={{
+              transform: `scale(${logoScale})`,
+              opacity: logoOpacity,
+              transition: 'none',
+            }}
+          >
+            {/* Lupa Circle - Minimalista */}
+            <div 
+              className="relative flex items-center justify-center"
+              style={{
+                width: isMobile ? '200px' : '300px',
+                height: isMobile ? '200px' : '300px',
+              }}
+            >
+              {/* Circle with subtle glow */}
+              <div
+                className="absolute inset-0 rounded-full border-4 bg-white/5 backdrop-blur-sm"
+                style={{
+                  borderColor: '#2C5F5F',
+                  boxShadow: `0 0 ${40 * phase1}px rgba(76, 175, 80, ${0.4 * phase1})`,
+                  transition: 'none',
+                }}
+              />
 
-      {/* Main Animation Container */}
-      <div className="relative w-full h-full flex items-center justify-center">
-        {/* Phase 1-2: Lupa with Scanner */}
-        <div
-          className={`transition-all duration-2000 ease-in-out ${
-            animationStarted ? "lupa-container animate-lupa-discovery" : "opacity-0 scale-0"
-          }`}
-        >
-          {/* Lupa Circle */}
-          <div className="relative lupa-circle">
-            <div className="w-64 h-64 md:w-96 md:h-96 lg:w-[400px] lg:h-[400px] rounded-full border-8 border-[#2C5F5F] bg-white/10 backdrop-blur-sm animate-lupa-glow">
-              {/* Scanner Beam */}
-              {animationStarted && (
-                <div className="scanner-beam absolute left-0 right-0 h-1 animate-scanner-scan"></div>
+              {/* Scanner beam - Sutil */}
+              {scannerProgress > 0 && (
+                <div
+                  className="absolute left-0 right-0 mx-8"
+                  style={{
+                    top: `${scannerProgress * 80 + 10}%`,
+                    height: '2px',
+                    background: 'linear-gradient(90deg, transparent, #4CAF50, transparent)',
+                    opacity: scannerProgress * (1 - scannerProgress),
+                    transition: 'none',
+                    boxShadow: '0 0 10px rgba(76, 175, 80, 0.8)',
+                  }}
+                />
               )}
 
-              {/* Logo/Lupa Icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg
-                  className="w-32 h-32 md:w-40 md:h-40 text-[#2C5F5F] animate-lupa-search"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-              </div>
+              {/* Logo Icon - Simplificado */}
+              <svg
+                className="w-24 h-24 md:w-32 md:h-32 text-[#2C5F5F] relative z-10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                style={{
+                  opacity: logoOpacity,
+                  transition: 'none',
+                }}
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
             </div>
           </div>
 
-          {/* Red Problem Particles */}
-          {animationStarted && (
-            <div className="particles-container absolute inset-0 pointer-events-none">
-              {Array.from({ length: 25 }).map((_, i) => (
+          {/* Particles - REDUZIDAS e minimalistas */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* Apenas 6-8 partículas sutis */}
+            {Array.from({ length: isMobile ? 6 : 8 }).map((_, i) => {
+              const angle = (i / 8) * Math.PI * 2;
+              const distance = 150 * particlesOpacity;
+              const x = Math.cos(angle) * distance;
+              const y = Math.sin(angle) * distance;
+
+              return (
                 <div
-                  key={`red-${i}`}
-                  className="particle-red absolute rounded-full bg-[#E57373] animate-particle-float"
+                  key={i}
+                  className="absolute rounded-full"
                   style={{
-                    width: `${Math.random() * 4 + 2}px`,
-                    height: `${Math.random() * 4 + 2}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    opacity: Math.random() * 0.3 + 0.6,
-                    animationDelay: `${Math.random() * 2}s`,
-                    animationDuration: `${Math.random() * 3 + 2}s`,
+                    width: '4px',
+                    height: '4px',
+                    background: scrollProgress < 0.5 ? '#E57373' : '#81C784',
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    opacity: particlesOpacity,
+                    transition: 'none',
+                    boxShadow: scrollProgress < 0.5 
+                      ? '0 0 8px rgba(229, 115, 115, 0.8)'
+                      : '0 0 8px rgba(129, 199, 132, 0.8)',
                   }}
                 />
-              ))}
-            </div>
+              );
+            })}
+          </div>
+
+          {/* Portal effect - Minimalista */}
+          {phase3 > 0 && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(circle, 
+                  rgba(129, 199, 132, ${0.1 * portalOpacity}) 0%, 
+                  rgba(129, 199, 132, ${0.05 * portalOpacity}) 30%, 
+                  transparent 60%
+                )`,
+                transform: `scale(${portalScale})`,
+                opacity: portalOpacity,
+                transition: 'none',
+              }}
+            />
           )}
 
-          {/* Green Solution Particles (Phase 3) */}
-          {animationStarted && (
-            <div className="particles-container absolute inset-0 pointer-events-none">
-              {Array.from({ length: 50 }).map((_, i) => (
-                <div
-                  key={`green-${i}`}
-                  className="particle-green absolute rounded-full bg-[#81C784] animate-particle-explode"
-                  style={{
-                    width: `${Math.random() * 6 + 2}px`,
-                    height: `${Math.random() * 6 + 2}px`,
-                    left: "50%",
-                    top: "50%",
-                    opacity: 0,
-                    animationDelay: `${5 + Math.random() * 0.5}s`,
-                    animationDuration: "2s",
-                    transform: `translate(-50%, -50%)`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          {/* Text - Clean e minimalista */}
+          <div 
+            className="absolute bottom-16 md:bottom-24 left-0 right-0 text-center px-6"
+            style={{
+              opacity: textOpacity,
+              transition: 'none',
+            }}
+          >
+            <p 
+              className="text-lg md:text-2xl lg:text-3xl font-light text-gray-700"
+              style={{
+                fontFamily: 'Poppins, sans-serif',
+                letterSpacing: '0.02em',
+              }}
+            >
+              {getText()}
+            </p>
+          </div>
         </div>
-
-        {/* Portal Effect (Phase 3) */}
-        {animationStarted && (
-          <div className="portal-overlay absolute inset-0 pointer-events-none animate-portal-expand"></div>
-        )}
-
-        {/* Text Phases */}
-        {animationStarted && (
-          <div className="absolute bottom-20 left-0 right-0 text-center px-4">
-            <p className="text-phase text-lg md:text-xl font-medium text-gray-800 animate-text-phase-1">
-              Identificando os pontos de vazamento...
-            </p>
-            <p className="text-phase text-lg md:text-xl font-medium text-gray-800 animate-text-phase-2">
-              E se cada vazamento virasse lucro?
-            </p>
-            <p className="text-phase text-xl md:text-2xl font-bold text-[#2C5F5F] animate-text-phase-3">
-              O método que transforma marketing em faturamento.
-            </p>
-          </div>
-        )}
       </div>
-
-      {/* CSS Animations */}
-      <style>{`
-        @keyframes lupa-glow {
-          0%, 100% {
-            box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
-          }
-          50% {
-            box-shadow: 0 0 60px rgba(76, 175, 80, 0.8);
-          }
-        }
-
-        @keyframes lupa-search {
-          0%, 100% { transform: rotate(0deg) translateY(0); }
-          25% { transform: rotate(5deg) translateY(-2px); }
-          75% { transform: rotate(-5deg) translateY(2px); }
-        }
-
-        @keyframes lupa-discovery {
-          0% { transform: scale(0); opacity: 0; }
-          20% { transform: scale(1); opacity: 1; }
-          80% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(50); opacity: 0; }
-        }
-
-        @keyframes scanner-scan {
-          0% { top: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
-        }
-
-        @keyframes particle-float {
-          0%, 100% { transform: translate(0, 0); }
-          25% { transform: translate(10px, -10px); }
-          50% { transform: translate(-5px, 5px); }
-          75% { transform: translate(5px, 10px); }
-        }
-
-        @keyframes particle-explode {
-          0% {
-            transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
-          }
-          20% {
-            opacity: 1;
-          }
-          100% {
-            transform: translate(
-              calc(-50% + ${Math.random() * 400 - 200}px),
-              calc(-50% + ${Math.random() * 400 - 200}px)
-            ) scale(1);
-            opacity: 0;
-          }
-        }
-
-        @keyframes portal-expand {
-          0% {
-            background: radial-gradient(circle, transparent 0%, transparent 100%);
-            transform: scale(0);
-            opacity: 0;
-          }
-          60% {
-            opacity: 0;
-          }
-          65% {
-            background: radial-gradient(circle, #E57373 0%, #F5EFE0 30%, #66BB6A 60%, transparent 100%);
-            transform: scale(0.1);
-            opacity: 1;
-          }
-          85% {
-            background: radial-gradient(circle, #E57373 0%, #F5EFE0 20%, #66BB6A 40%, transparent 70%);
-            transform: scale(3);
-            opacity: 1;
-          }
-          100% {
-            background: radial-gradient(circle, transparent 0%, transparent 100%);
-            transform: scale(10);
-            opacity: 0;
-          }
-        }
-
-        @keyframes text-phase-1 {
-          0% { opacity: 0; transform: translateY(20px); }
-          20% { opacity: 1; transform: translateY(0); }
-          35% { opacity: 1; transform: translateY(0); }
-          45% { opacity: 0; transform: translateY(-20px); }
-          100% { opacity: 0; }
-        }
-
-        @keyframes text-phase-2 {
-          0%, 45% { opacity: 0; transform: translateY(20px); }
-          55% { opacity: 1; transform: translateY(0); }
-          70% { opacity: 1; transform: translateY(0); }
-          80% { opacity: 0; transform: translateY(-20px); }
-          100% { opacity: 0; }
-        }
-
-        @keyframes text-phase-3 {
-          0%, 80% { opacity: 0; transform: translateY(20px); }
-          90% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-lupa-glow {
-          animation: lupa-glow 2s ease-in-out infinite;
-        }
-
-        .animate-lupa-search {
-          animation: lupa-search 3s ease-in-out infinite;
-        }
-
-        .animate-lupa-discovery {
-          animation: lupa-discovery 8s ease-in-out forwards;
-        }
-
-        .scanner-beam {
-          background: linear-gradient(180deg, transparent 0%, #4CAF50 50%, transparent 100%);
-          animation: scanner-scan 3s linear 2s 2;
-        }
-
-        .animate-particle-float {
-          animation: particle-float linear infinite;
-        }
-
-        .animate-particle-explode {
-          animation: particle-explode ease-out forwards;
-        }
-
-        .animate-portal-expand {
-          animation: portal-expand 8s ease-in-out forwards;
-        }
-
-        .text-phase {
-          position: absolute;
-          left: 0;
-          right: 0;
-          opacity: 0;
-        }
-
-        .animate-text-phase-1 {
-          animation: text-phase-1 8s ease-in-out forwards;
-        }
-
-        .animate-text-phase-2 {
-          animation: text-phase-2 8s ease-in-out forwards;
-        }
-
-        .animate-text-phase-3 {
-          animation: text-phase-3 8s ease-in-out forwards;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .animate-lupa-discovery {
-            animation-duration: 2s;
-          }
-          .scanner-beam,
-          .animate-particle-float,
-          .animate-particle-explode,
-          .animate-portal-expand {
-            animation: none;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .animate-lupa-discovery {
-            animation-duration: 3s;
-          }
-        }
-      `}</style>
     </section>
   );
 };
