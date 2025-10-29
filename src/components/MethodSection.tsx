@@ -46,7 +46,7 @@ const MethodSection = () => {
   };
 
   return (
-    <section className="py-20 md:py-32 bg-white relative overflow-hidden">
+    <section className="relative z-10 py-20 md:py-32 bg-white overflow-hidden -mt-1">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-4 animate-fade-in">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#424242] tracking-tight leading-tight">

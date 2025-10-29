@@ -13,212 +13,170 @@ const TransitionAnimation = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Scroll-based animation calculation
+  // Scroll-based animation
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
 
-      const element = containerRef.current;
-      const rect = element.getBoundingClientRect();
+      const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-
-      // Calculate scroll progress (0 to 1)
+      
+      // Calculate progress (0 to 1)
       const scrollStart = rect.top - windowHeight;
       const scrollEnd = rect.bottom;
       const scrollRange = scrollEnd - scrollStart;
       const currentScroll = -scrollStart;
-
+      
       const progress = Math.max(0, Math.min(1, currentScroll / scrollRange));
       setScrollProgress(progress);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial calculation
+    handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Calculate phase progress (0-1 for each phase)
-  const phase1 = Math.max(0, Math.min(1, scrollProgress / 0.25)); // 0-25%
-  const phase2 = Math.max(0, Math.min(1, (scrollProgress - 0.25) / 0.25)); // 25-50%
-  const phase3 = Math.max(0, Math.min(1, (scrollProgress - 0.5) / 0.25)); // 50-75%
-  const phase4 = Math.max(0, Math.min(1, (scrollProgress - 0.75) / 0.25)); // 75-100%
+  // Phase calculations (smooth transitions)
+  const logoPhase = Math.max(0, Math.min(1, scrollProgress / 0.3)); // 0-30%
+  const scannerPhase = Math.max(0, Math.min(1, (scrollProgress - 0.3) / 0.2)); // 30-50%
+  const fadePhase = Math.max(0, Math.min(1, (scrollProgress - 0.5) / 0.3)); // 50-80%
+  const exitPhase = Math.max(0, Math.min(1, (scrollProgress - 0.8) / 0.2)); // 80-100%
 
-  // Logo scale and opacity
-  const logoScale = phase1;
-  const logoOpacity = phase1;
+  // Logo transform
+  const logoScale = 0.3 + (logoPhase * 0.7); // 0.3 to 1
+  const logoOpacity = logoPhase * (1 - exitPhase);
 
-  // Scanner progress
-  const scannerProgress = phase2;
+  // Scanner position (horizontal line)
+  const scannerX = scannerPhase * 100; // 0% to 100%
 
-  // Portal expansion
-  const portalScale = 1 + (phase3 * 19); // 1 to 20
-  const portalOpacity = phase3 * (1 - phase4); // Fades out in phase 4
-
-  // Background color transition
-  const bgProgress = Math.max(0, Math.min(1, (scrollProgress - 0.5) / 0.3));
+  // Background transition
+  const bgProgress = Math.max(0, Math.min(1, (scrollProgress - 0.4) / 0.4));
   const bgColor = {
     r: 245 + (255 - 245) * bgProgress,
     g: 239 + (255 - 239) * bgProgress,
     b: 224 + (255 - 224) * bgProgress,
   };
 
-  // Particle opacity (simplified - fewer particles)
-  const particlesOpacity = phase2 * (1 - phase3);
-
   // Text content based on phase
   const getText = () => {
-    if (scrollProgress < 0.25) return "";
-    if (scrollProgress < 0.5) return "Identificando pontos de vazamento...";
-    if (scrollProgress < 0.75) return "Transformando em oportunidades...";
-    return "O método que gera resultados.";
+    if (scrollProgress < 0.3) return "";
+    if (scrollProgress < 0.6) return "Analisando sua jornada...";
+    if (scrollProgress < 0.85) return "Identificando oportunidades...";
+    return "Transformando em resultados.";
   };
 
-  const textOpacity = scrollProgress > 0.2 ? Math.min(1, (scrollProgress - 0.2) / 0.1) : 0;
+  const textOpacity = scrollProgress > 0.25 
+    ? Math.min(1, (scrollProgress - 0.25) / 0.15) * (1 - Math.max(0, (scrollProgress - 0.85) / 0.15))
+    : 0;
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden"
+      className="relative w-full"
       style={{
-        minHeight: isMobile ? '200vh' : '300vh',
+        minHeight: isMobile ? '200vh' : '250vh',
         backgroundColor: `rgb(${bgColor.r}, ${bgColor.g}, ${bgColor.b})`,
+        transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Sticky container - stays fixed while scrolling */}
+      {/* Sticky container - ISSO CRIA O EFEITO "FIXO" */}
       <div 
-        className="sticky top-0 w-full flex items-center justify-center"
-        style={{ height: '100vh' }}
+        className="sticky top-0 w-full flex items-center justify-center overflow-hidden"
+        style={{ 
+          height: '100vh',
+        }}
       >
         {/* Main content */}
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex flex-col items-center justify-center px-6">
           
-          {/* Logo/Lupa - Phase 1 */}
+          {/* Logo Vicommerce - MINIMALISTA */}
           <div
-            className="relative z-10"
+            className="relative z-10 transition-none"
             style={{
               transform: `scale(${logoScale})`,
               opacity: logoOpacity,
-              transition: 'none',
             }}
           >
-            {/* Lupa Circle - Minimalista */}
-            <div 
-              className="relative flex items-center justify-center"
-              style={{
-                width: isMobile ? '200px' : '300px',
-                height: isMobile ? '200px' : '300px',
-              }}
-            >
-              {/* Circle with subtle glow */}
-              <div
-                className="absolute inset-0 rounded-full border-4 bg-white/5 backdrop-blur-sm"
-                style={{
-                  borderColor: '#2C5F5F',
-                  boxShadow: `0 0 ${40 * phase1}px rgba(76, 175, 80, ${0.4 * phase1})`,
-                  transition: 'none',
-                }}
-              />
-
-              {/* Scanner beam - Sutil */}
-              {scannerProgress > 0 && (
-                <div
-                  className="absolute left-0 right-0 mx-8"
-                  style={{
-                    top: `${scannerProgress * 80 + 10}%`,
-                    height: '2px',
-                    background: 'linear-gradient(90deg, transparent, #4CAF50, transparent)',
-                    opacity: scannerProgress * (1 - scannerProgress),
-                    transition: 'none',
-                    boxShadow: '0 0 10px rgba(76, 175, 80, 0.8)',
-                  }}
-                />
-              )}
-
-              {/* Logo Icon - Simplificado */}
+            {/* Logo real da Vicommerce */}
+            <div className="text-[#2C5F5F] flex flex-col items-center gap-2">
+              {/* Lupa simplificada */}
               <svg
-                className="w-24 h-24 md:w-32 md:h-32 text-[#2C5F5F] relative z-10"
+                className="w-20 h-20 md:w-24 md:h-24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.35-4.35" strokeLinecap="round" />
+              </svg>
+              
+              {/* Texto Vicommerce */}
+              <div className="text-center">
+                <h2 
+                  className="text-2xl md:text-3xl font-semibold tracking-tight"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  Vicommerce
+                </h2>
+                <p 
+                  className="text-xs md:text-sm font-light uppercase tracking-widest text-gray-600"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  Marketing Digital
+                </p>
+              </div>
+            </div>
+
+            {/* Scanner line - HORIZONTAL E MINIMALISTA */}
+            {scannerPhase > 0 && scannerPhase < 1 && (
+              <div 
+                className="absolute top-1/2 left-0 right-0 -translate-y-1/2 overflow-hidden"
                 style={{
-                  opacity: logoOpacity,
-                  transition: 'none',
+                  opacity: scannerPhase * (1 - scannerPhase) * 2, // Fade in/out suave
                 }}
               >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Particles - REDUZIDAS e minimalistas */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Apenas 6-8 partículas sutis */}
-            {Array.from({ length: isMobile ? 6 : 8 }).map((_, i) => {
-              const angle = (i / 8) * Math.PI * 2;
-              const distance = 150 * particlesOpacity;
-              const x = Math.cos(angle) * distance;
-              const y = Math.sin(angle) * distance;
-
-              return (
                 <div
-                  key={i}
-                  className="absolute rounded-full"
+                  className="h-[1px] w-full relative"
                   style={{
-                    width: '4px',
-                    height: '4px',
-                    background: scrollProgress < 0.5 ? '#E57373' : '#81C784',
-                    left: '50%',
-                    top: '50%',
-                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                    opacity: particlesOpacity,
-                    transition: 'none',
-                    boxShadow: scrollProgress < 0.5 
-                      ? '0 0 8px rgba(229, 115, 115, 0.8)'
-                      : '0 0 8px rgba(129, 199, 132, 0.8)',
+                    background: 'linear-gradient(90deg, transparent, #4CAF50, transparent)',
+                    transform: `translateX(${scannerX - 50}%)`,
+                    boxShadow: '0 0 10px rgba(76, 175, 80, 0.5)',
                   }}
                 />
-              );
-            })}
+              </div>
+            )}
           </div>
 
-          {/* Portal effect - Minimalista */}
-          {phase3 > 0 && (
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: `radial-gradient(circle, 
-                  rgba(129, 199, 132, ${0.1 * portalOpacity}) 0%, 
-                  rgba(129, 199, 132, ${0.05 * portalOpacity}) 30%, 
-                  transparent 60%
-                )`,
-                transform: `scale(${portalScale})`,
-                opacity: portalOpacity,
-                transition: 'none',
-              }}
-            />
-          )}
-
-          {/* Text - Clean e minimalista */}
+          {/* Text - CLEAN E MINIMAL */}
           <div 
             className="absolute bottom-16 md:bottom-24 left-0 right-0 text-center px-6"
             style={{
               opacity: textOpacity,
-              transition: 'none',
             }}
           >
             <p 
-              className="text-lg md:text-2xl lg:text-3xl font-light text-gray-700"
+              className="text-lg md:text-2xl font-light text-gray-700 max-w-2xl mx-auto"
               style={{
                 fontFamily: 'Poppins, sans-serif',
                 letterSpacing: '0.02em',
+                lineHeight: '1.6',
               }}
             >
               {getText()}
             </p>
           </div>
+
+          {/* Subtle gradient overlay (opcional - para profundidade) */}
+          {fadePhase > 0 && (
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `radial-gradient(circle at center, transparent 40%, rgba(255,255,255,${fadePhase * 0.3}) 80%)`,
+              }}
+            />
+          )}
         </div>
       </div>
     </section>
