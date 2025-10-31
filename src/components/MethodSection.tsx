@@ -200,15 +200,15 @@ const MethodSection = () => {
         </div>
 
         {/* CTA Button */}
-        <div className="text-center animate-fade-in px-4">
+        <div className="text-center animate-fade-in px-2 sm:px-4">
           <Button
             onClick={scrollToForm}
             size="lg"
-            className="w-full max-w-3xl mx-auto bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle px-6 py-5 md:px-8 md:py-6 text-base md:text-lg font-medium text-center leading-normal md:leading-relaxed flex flex-col sm:flex-row items-center justify-center gap-3 h-auto"
+            className="w-full max-w-3xl mx-auto bg-[#81C784] text-white hover:bg-[#66BB6A] shadow-[0_4px_16px_rgba(129,199,132,0.3)] hover:shadow-[0_8px_24px_rgba(129,199,132,0.5)] transition-all duration-300 animate-pulse-subtle !px-3 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 !text-xs sm:text-base md:text-lg font-medium text-center !leading-tight sm:leading-normal md:leading-relaxed flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 h-auto !whitespace-normal"
           >
-            <MessageCircle className="w-6 h-6 flex-shrink-0" />
+            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
             {/* Texto para Mobile */}
-            <span className="block sm:hidden">Fale com um especialista e aumente seu faturamento</span>
+            <span className="block sm:hidden !whitespace-normal !break-words w-full">Fale com especialista e aumente faturamento</span>
             {/* Texto para Desktop */}
             <span className="hidden sm:block">Descubra onde você está perdendo oportunidades — fale com um especialista</span>
           </Button>
