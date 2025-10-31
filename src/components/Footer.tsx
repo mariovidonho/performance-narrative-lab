@@ -1,10 +1,9 @@
 import { Instagram, Linkedin, MessageCircle } from "lucide-react";
 
 const Footer = () => {
-  // Links das redes sociais
   const socialLinks = {
     instagram: "https://www.instagram.com/vicommerce_mkt/",
-    linkedin: "#", // Quando tiver o LinkedIn, substitua aqui
+    linkedin: "#",
     whatsapp: "5591992686313"
   };
 
@@ -13,7 +12,6 @@ const Footer = () => {
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           
-          {/* Logo and tagline */}
           <div className="space-y-4">
             <h3 
               className="text-2xl font-bold"
@@ -29,7 +27,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Links */}
           <div className="space-y-4">
             <h4 
               className="font-semibold text-lg"
@@ -59,7 +56,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Social */}
           <div className="space-y-4">
             <h4 
               className="font-semibold text-lg"
@@ -69,7 +65,6 @@ const Footer = () => {
             </h4>
             <div className="flex gap-4">
               
-              {/* Instagram */}
               
                 href={socialLinks.instagram}
                 target="_blank"
@@ -80,21 +75,19 @@ const Footer = () => {
                 <Instagram className="w-5 h-5" />
               </a>
 
-              {/* LinkedIn */}
               
                 href={socialLinks.linkedin}
                 target={socialLinks.linkedin === "#" ? "_self" : "_blank"}
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:opacity-50"
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110"
                 aria-label="LinkedIn da Vicommerce"
                 title={socialLinks.linkedin === "#" ? "Em breve" : "LinkedIn da Vicommerce"}
               >
                 <Linkedin className="w-5 h-5" />
               </a>
 
-              {/* WhatsApp */}
               
-                href={`https://wa.me/${socialLinks.whatsapp}?text=Olá! Gostaria de saber mais sobre os serviços da Vicommerce.`}
+                href={`https://wa.me/${socialLinks.whatsapp}?text=${encodeURIComponent("Olá! Gostaria de saber mais sobre os serviços da Vicommerce.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -108,13 +101,12 @@ const Footer = () => {
 
         </div>
 
-        {/* Copyright */}
         <div className="border-t border-white/20 pt-8 text-center text-white/60">
           <p 
             className="font-light"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            © {new Date().getFullYear()} Vicommerce – Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} Vicommerce &ndash; Todos os direitos reservados.
           </p>
         </div>
       </div>
