@@ -38,8 +38,7 @@ const Footer = () => {
               Redes Sociais
             </h4>
             <div className="flex gap-4">
-              
-              
+              <a
                 href="https://www.instagram.com/vicommerce_mkt/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -49,15 +48,14 @@ const Footer = () => {
                 <Instagram className="w-5 h-5" />
               </a>
 
-              
+              <a
                 href="#"
                 className="w-10 h-10 rounded-full bg-white bg-opacity-10 hover:bg-opacity-20 flex items-center justify-center transition-all duration-300"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
-
-              
+              <a
                 href="https://wa.me/5591992686313"
                 target="_blank"
                 rel="noopener noreferrer"
